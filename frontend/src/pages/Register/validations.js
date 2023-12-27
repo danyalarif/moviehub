@@ -1,0 +1,4 @@
+export const nameValidation = (value) => /^[A-Za-z]{3,20}$/.test(value?.trim()) ? null : 'Name must be between 3 and 20 characters long'
+export const emailValidation = (value) => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value?.trim()) ? null : 'Email must be valid'
+export const passwordValidation = (value) => /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*#?^&])[A-Za-z\d@$!%*#?^&]{8,}$/ ? null : 'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter and one number'
+export const confirmPasswordValidation = (value, password) => value === password ? null : 'Passwords must match'
