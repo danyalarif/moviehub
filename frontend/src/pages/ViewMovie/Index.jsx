@@ -11,9 +11,11 @@ import {
   Badge,
   Spoiler,
   Tabs,
+  Button,
+  LoadingOverlay,
 } from "@mantine/core";
 import ReactPlayer from "react-player";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./styles";
 import { genreColors } from "../../helpers/data";
 import {
@@ -24,6 +26,10 @@ import {
 } from "@tabler/icons-react";
 import { Carousel } from "@mantine/carousel";
 import Reviews from "../../components/Reviews/Index";
+import { useContext, useState } from "react";
+import { UserContext } from "../../contexts/UserContext";
+import { showNotification } from "@mantine/notifications";
+import { axiosDelete } from "../../helpers/axiosHelper";
 
 const useStyles = createStyles((theme) => styles(theme));
 
@@ -31,8 +37,55 @@ export default function ViewMovie() {
   const movie = useLocation().state?.movie;
   const theme = useMantineTheme();
   const { classes } = useStyles();
+  const navigate = useNavigate()
+  const [isLoading, setIsLoading] = useState(false)
+  const {user} = useContext(UserContext)
+  async function deleteMovie() {
+    if (!user) {
+      showNotification({
+        title: "Error",
+        message: "You need to login to delete a movie.",
+        color: "red",
+      });
+      return
+    }
+    if (user._id !== movie.createdBy) {
+      showNotification({
+        title: "Error",
+        message: "You are not authorized to delete this movie.",
+        color: "red",
+      });
+      return
+    }
+    //calling delete api
+    setIsLoading(true)
+    try {
+      const response = await axiosDelete(`/movie/${movie._id}`);
+      if (response) {
+        showNotification({
+          title: "Success",
+          message: "Movie deleted successfully.",
+          color: "green",
+        })
+        //fetching the updated reviews
+        navigate('/')
+      }
+    } catch(e) {
+      //handling unknown errors
+      console.log(e);
+      showNotification({
+        title: "Error",
+        message: "An unknown error occured. Please try again later.",
+        color: "red",
+      });
+    } finally {
+      setIsLoading(false)
+    }
+
+  }
   return (
     <Box px={32} mt={16}>
+      <LoadingOverlay visible={isLoading} overlayBlur={2} />
       {/* Movie Information */}
       <Text className={classes.mainHeading}>Movie Information</Text>
       <Grid align="stretch">
@@ -88,6 +141,9 @@ export default function ViewMovie() {
             >
               <Text fw={500}>{movie?.summary}</Text>
             </Spoiler>
+            <Group position="center">
+              <Button color="red" onClick={() => deleteMovie()}>Delete Movie</Button>
+            </Group>
           </Card>
         </Grid.Col>
       </Grid>

@@ -37,7 +37,7 @@ export default function AddMovie() {
       title: "",
       summary: "",
       releaseDate: "",
-      genres: [],
+      genres: ['Action'],
       duration: 0,
       movieImages: "",
       video: "",
@@ -92,7 +92,7 @@ export default function AddMovie() {
             withAsterisk
           />
           <Textarea
-            label="summary"
+            label="Summary"
             placeholder="Enter movie summary"
             {...form.getInputProps("summary")}
             withAsterisk
