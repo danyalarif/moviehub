@@ -1,8 +1,14 @@
 import mongoose from 'mongoose'
 import server from './server.js'
-mongoose.connection.on('connected', () => {
-    const port = process.env.PORT || 5000
-    server.listen(port, () => {
+
+const createServer = async (appPort) => {
+    const port = appPort || process.env.PORT || 5000
+    return server.listen(port, () => {
         console.log('app listening on port', + port)
     })
+}
+mongoose.connection.on('connected', () => {
+    createServer()
 })
+
+export default createServer
