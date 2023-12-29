@@ -2,7 +2,7 @@ import { validationResult } from "express-validator"
 import RequestError from "../utilities/error/RequestError.js"
 import { addUser, getUser } from "../services/userService.js"
 import generateToken from '../utilities/jwt/generateToken.js'
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcryptjs'
 export const register = async (req, res, next) => {
     //detecting errors in req.body
     const errors = validationResult(req)

@@ -1,5 +1,5 @@
-import { defineConfig, loadEnv } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig, loadEnv } from "vite";
+import react from "@vitejs/plugin-react";
 
 export default defineConfig((props) => {
   const env = loadEnv(props.mode, process.cwd(), "VITE_BACKEND_URI");
@@ -8,9 +8,15 @@ export default defineConfig((props) => {
   };
 
   return {
-      plugins: [
-          react(),
-      ],
-      define: envWithProcessPrefix,
-     }
-  })
+    plugins: [react()],
+    define: envWithProcessPrefix,
+    server: {
+      watch: {
+        usePolling: true,
+      },
+      host: true,
+      strictPort: true,
+      port: 5173,
+    },
+  };
+});

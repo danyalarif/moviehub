@@ -11,4 +11,4 @@ services:
       - moviehub-api
     build: ./frontend
     ports:
-      - 80:80
+      - 5173:5173
