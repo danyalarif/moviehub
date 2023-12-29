@@ -6,7 +6,7 @@ export const reviewValidation = [
     .withMessage("Description is required")
     .isString()
     .withMessage("Description should be string")
-    .matches(/^[A-Za-z\s]{3,200}$/)
+    .isLength({min: 3, max: 500})
     .withMessage("Description should be between 3 and 200 characters long"),
     body("movie")
     .exists({ checkFalsy: true })

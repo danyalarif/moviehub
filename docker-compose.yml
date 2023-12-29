@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:  
+  moviehub-api:
+    build: ./backend
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+  moviehub-ui:
+    depends_on:
+      - moviehub-api
+    build: ./frontend
+    ports:
+      - 80:80

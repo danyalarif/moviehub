@@ -6,7 +6,7 @@ export const axiosGet = async (url) => {
   try {
     const response = await http.get(url);
     //only return data if request was successful
-    if (response.data.data) return response.data.data;
+    if (response?.data?.data) return response.data.data;
     showNotification({
       title: "Error",
       message: response.data.message,
@@ -33,7 +33,7 @@ export const axiosGet = async (url) => {
 export const axiosPost = async (url, data) => {
   try {
     const response = await http.post(url, data);
-    if (response.data.data) return response.data.data;
+    if (response?.data?.data) return response.data.data;
     showNotification({
       title: "Error",
       message: response.data.message,
@@ -58,7 +58,7 @@ export const axiosPost = async (url, data) => {
 export const axiosPut = async (url, data) => {
   try {
     const response = await http.put(url, data);
-    if (response.data.data) return response.data.data;
+    if (response?.data?.data) return response.data.data;
     showNotification({
       title: "Error",
       message: response.data.message,
@@ -84,7 +84,7 @@ export const axiosDelete = async (url) => {
   try {
     const response = await http.delete(url);
     //only return data if request was successful
-    if (response.data.data) return response.data.data;
+    if (response?.data?.data) return response.data.data;
     showNotification({
       title: "Error",
       message: response.data.message,

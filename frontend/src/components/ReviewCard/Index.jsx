@@ -29,8 +29,8 @@ const ReviewCard = ({ review, handleEditReview, handleDeleteReview }) => {
             </Text>
           </Group>
           <Group spacing={2} position="right" mt={4}>
-            <IconEdit size={18} color="green" style={{cursor: 'pointer'}} onClick={() => handleEditReview(review)} />
-            <IconTrash size={18} color="red" style={{cursor: 'pointer'}} onClick={() => handleDeleteReview(review)} />
+            <IconEdit data-testid='edit-icon' size={18} color="green" style={{cursor: 'pointer'}} onClick={() => handleEditReview(review)} />
+            <IconTrash data-testid='delete-icon' size={18} color="red" style={{cursor: 'pointer'}} onClick={() => handleDeleteReview(review)} />
           </Group>
         </Box>
       </Group>

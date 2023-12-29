@@ -1,11 +1,11 @@
-import { Box, Button, Group, LoadingOverlay, Modal, ScrollArea, Stack, Textarea, createStyles } from "@mantine/core";
+import { Box, Button, Group, LoadingOverlay, Modal, Rating, ScrollArea, Stack, Textarea, createStyles, Text } from "@mantine/core";
 import styles from "./styles";
 import ReviewCard from "../ReviewCard/Index";
 import { IconPlus } from "@tabler/icons-react";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../contexts/UserContext";
 import { showNotification } from "@mantine/notifications";
-import { axiosDelete, axiosGet } from "../../helpers/axiosHelper";
+import { axiosDelete, axiosGet, axiosPost, axiosPut } from "../../helpers/axiosHelper";
 
 const useStyles = createStyles((theme) => styles(theme));
 
@@ -15,6 +15,7 @@ export default function Reviews({ movie }) {
   const {user} = useContext(UserContext)
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [reviewText, setReviewText] = useState('')
+  const [stars, setStars] = useState(1)
   const [review, setReview] = useState(undefined)  //state for determining if review is being edited
   const [isLoading, setIsLoading] = useState(false)
   async function getReviews() {
@@ -42,8 +43,13 @@ export default function Reviews({ movie }) {
       return
     }
     setIsLoading(true)
+    const body = {
+      movie: movie._id,
+      description: reviewText,
+      stars: stars
+    }
     try {
-      const response = await axiosPost("/review", {description: reviewText});
+      const response = review ? await axiosPut(`/review/${review._id}`, body) : await axiosPost("/review", body);
       if (response) {
         showNotification({
           title: "Success",
@@ -123,7 +129,7 @@ export default function Reviews({ movie }) {
     //calling delete api
     setIsLoading(true)
     try {
-      const response = await axiosDelete(`/review/${review._id}`);
+      const response = await axiosDelete(`/review/${selectedReview._id}`);
       if (response) {
         showNotification({
           title: "Success",
@@ -154,6 +160,8 @@ export default function Reviews({ movie }) {
       {/* Add Review modal */}
       <Modal opened={addModalVisible} onClose={() => setAddModalVisible(false)} centered title={`${review ? 'Update' : 'Add'} Review`}>
         <Stack spacing={12}>
+          <Text fw={500}>Select Rating</Text>
+          <Rating value={stars} onChange={setStars} fractions={2} />
           <Textarea label='Review' placeholder="Enter your review" value={reviewText} onChange={e => setReviewText(e.target.value)} />
           <Group position="apart">
             <Button color="red" onClick={() => setAddModalVisible(false)}>Cancel</Button>
@@ -166,13 +174,11 @@ export default function Reviews({ movie }) {
       <Group position="right" mb={16}>
         <Button leftIcon={<IconPlus />} onClick={() => handleAddReview()}>Add Review</Button>
       </Group>
-      <ScrollArea style={{ height: 200 }} offsetScrollbars >
-        <Stack spacing={12}>
+        <Stack spacing={12} pb={16}>
           {reviews.map((review) => (
             <ReviewCard review={review} key={review._id} handleEditReview={handleEditReview} handleDeleteReview={handleDeleteReview} />
           ))}
         </Stack>
-      </ScrollArea>
     </Box>
   );
 }

@@ -1,17 +1,17 @@
-# Build react client
-FROM node:alpine
+# Stage 1
+FROM node:14 as build-stage
 
-# Working directory be app
-WORKDIR /usr/src/app
-
-COPY package*.json ./
-
-###  Installing dependencies
-RUN npm install --silent
-
-# copy local files to app folder
+WORKDIR /moviehub-ui
+COPY package.json .
+RUN npm install
 COPY . .
 
-EXPOSE 5173
+RUN npm run build
 
-CMD ["npm","start"]
+# Stage 2
+FROM nginx:1.17.0-alpine
+
+COPY --from=build-stage /frontend/build /usr/share/nginx/html
+EXPOSE 80
+
+CMD nginx -g 'daemon off;'

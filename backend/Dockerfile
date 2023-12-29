@@ -1,18 +1,9 @@
 FROM node:alpine
 
-# Create App Directory
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
-
-# Install Dependencies
-COPY package*.json ./
-
-RUN npm install --silent
-
-# Copy app source code
+WORKDIR /moviehub-api
+COPY package.json .
+RUN npm install
 COPY . .
+CMD npm start
 
-# Exports
 EXPOSE 3000
-
-CMD ["npm","start"]
